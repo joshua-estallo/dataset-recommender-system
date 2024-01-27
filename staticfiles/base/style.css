@@ -1,0 +1,90 @@
+/* GENERAL CSS */
+body {
+  background-color: #333;
+  color: white;
+}
+
+/* NAV CSS */
+
+header {
+  background-color: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+header nav {
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 5px;
+  padding: 20px 0px;
+}
+
+header nav input {
+  border: 1px solid white;
+  border-radius: 5px;
+  width: 350px;
+  padding: 10px;
+}
+
+
+/* HOME CSS */
+main {
+  margin: auto 0px;  
+}
+
+.container {
+  display: flex;
+  margin: 0px auto;  
+
+  width: 90%;
+}
+
+.filter {
+  background-color: red;
+  flex: 1;
+}
+
+.content {
+  flex: 3;
+  background-color: blue;
+}
+
+
+.content .browse-upload-text {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.container .filter {
+  border: 2px solid black;
+  margin: 0px auto;
+}
+
+.filter .type, .filter .filter-text {
+  text-align: center;
+}
+
+.content .browse{
+  text-align: center;
+}
+
+.content .datasetss {
+  border: 2px solid white;
+  text-align: center;
+}
+
+.filter .type {
+  border: 2px solid pink;
+}
+/* DATASET CSS */
+
+
+
+/* UPLOAD CSS */

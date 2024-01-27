@@ -1,0 +1,24 @@
+<header>
+  <nav>
+    <a href="/"><div class="logo">DATASET REPOSITORY</div></a>
+    <div class="search">
+      <form action="{% url 'home' %}" method="GET">
+        <input type="text" id="searchInput" name="q" placeholder="Search a dataset..." autocomplete="off">
+      </form>
+    </div>
+  </nav>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  var searchInput = document.getElementById('searchInput');
+
+  searchInput.addEventListener('focus', function() {
+      this.removeAttribute('placeholder');
+  });
+
+  searchInput.addEventListener('blur', function() {
+      this.setAttribute('placeholder', 'Search a dataset...');
+  });
+});
+</script>

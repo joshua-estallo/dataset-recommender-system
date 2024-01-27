@@ -1,0 +1,415 @@
+{% extends "base/default.html" %}
+{% block title %}  {{ dataset.title }} {% endblock %}
+
+{% block content %}
+{% load static %}
+<style>
+  /* body {
+    background-color: #111;
+    color: white;
+  } */
+ .main-dataset .container {
+  display: flex;  
+  justify-content: space-around;
+  margin-bottom: 200px;
+}
+
+.container .left {
+  width: 60%;
+}
+
+.container .right {
+  width: 30%;
+}
+
+.left .information {
+  padding: 30px;
+  outline: 1px solid white;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  /* background-color: #fff;
+  color: black; */
+}
+.left .information > * {
+  width: calc(33.33% - 10px); /* Adjust the width based on your styling preferences */
+  margin-bottom: 30px; /* Add margin or adjust as needed */
+  /* border: 1px solid white; */
+}
+
+.left .property {
+  color: skyblue;
+}
+
+.left .description, .left .research-title {
+  width: 90%;
+}
+p {
+  /* font-size: 100px; */
+}
+
+.right .top {
+  text-align: center;
+  margin-bottom: 50px;
+  border: 1px solid white;
+  padding: 25px;
+  border-radius: 10px;
+}
+
+.right .bottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.right .top .recommended-text {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  padding-bottom: 5px;
+  border-bottom: 1px solid white;
+}
+.if-authenticated {
+  width: 100%;
+  margin: 0px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+a {
+  display: block;
+}
+.cite, .download, .update, .remove {
+  text-align: center;
+  width: 90%;
+  border: 2px solid white;
+  padding: 10px 20px;
+  margin: 10px 0;
+  color: white;
+  cursor: pointer;
+}
+.cite {
+  background-color: #008CBA;
+}
+.download {
+  background-color: #5cb85c;
+}
+.no-file {
+  text-align: center;
+  width: 90%;
+  padding: 10px 20px;
+  margin: 10px 0;
+  color: white;
+}
+/* citation popup */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: 200ms ease-in-out;
+  border: 2px solid green;
+  z-index: 10;
+  background-color: white;
+  color: black;
+  width: 500px;
+  max-width: 80%;
+  padding: 0 10px 20px;
+}
+
+.modal.active {
+  transform: translate(-50%, -50%) scale(1);
+  transition: 200ms ease-in-out;
+
+}
+
+.modal-header {
+  display:  flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.modal-header .close-button{
+  cursor: pointer;  
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.modal-header-archive .close-button-archive {
+  font-weight: normal;
+}
+.cite-body, .bibtex-body {
+  padding: 10px 15px;
+  background-color: hsl(0, 0%, 80%);
+  color: black;
+  width: 80%;
+  margin: 0px auto;
+}
+
+#overlay {
+  position: fixed;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .5);
+  pointer-events: none;
+}
+
+#overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.bibtex-body {
+    white-space: pre-wrap;
+}
+.modal-archive {
+  /* background-color: lightgoldenrodyellow; */
+  text-align: center;
+  padding-top: 20px;
+  font-weight: normal;
+}
+
+.modal-header-archive {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0px 0px;
+}
+
+.modal .title:hover {
+  text-decoration: underline;
+}
+
+.archive-button {
+  /* background: #75a8d1; */
+  color:#75a8d1 ;
+}
+.update-button {
+  color: #FF9248;
+}
+/* end cite popup */
+
+/* recs */
+
+.rec {
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.rec:hover {
+  /* color: hsl(60, 100%, 80%); */
+  text-decoration: underline;
+}
+
+/* .if-authenticated > * {
+  display: block;
+  outline: 1px solid white;
+  padding: 7px 15px;
+}
+
+.if-authenticated {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  gap: 150px;
+} */
+
+
+</style>
+<main class="main-dataset">
+  <div class="container">
+    <div class="left">
+      
+      <div style="text-align: center; margin-bottom: 20px;">
+        DATASET INFORMATION
+      </div>
+      <div class="information">
+        <div class="title">
+          <p class="property">TITLE</p>
+          <p>{{ dataset.title }}</p>
+        </div>
+        <div class="data_type">
+          <p class="property">DATA TYPE:</p>
+          <p>{{ dataset.data_type }}</p>
+        </div>
+        <div class="file_format">
+          <p class="property">FILE FORMAT:</p>
+          <p>{{ dataset.file_format }}</p>
+        </div>
+        <div class="description">
+          <p class="property">DESCRIPTION:</p>
+          {% if dataset.description %}
+          <p>{{ dataset.description }}</p>
+          {% else %}
+          <p>{{ dataset.overview }}</p>
+          {% endif %}
+        </div>
+        <div class="categories">
+          <p class="property">CATEGORIES:</p>
+          <p>{{ dataset.category }}</p>
+        </div>
+        <div class="tags">
+          <p class="property">TAGS/KEYWORDS:</p>
+          <p>{{ dataset.tags }}</p>
+        </div>
+        <div class="source">
+          <p class="property">SOURCE:</p>
+          <p>{{ dataset.source }}</p>
+        </div>
+        <div class="link">
+          <p class="property">REFERENCE(s):</p>
+          <p>{{ dataset.link }}</p>
+        </div>
+        <div class="form">
+          <p class="property">FORM:</p>
+          <p>{{ dataset.form }} data</p>
+        </div>
+        <!-- <div class="overview">
+          <p class="property">OVERVIEW:</p>
+          <p>{{ dataset.overview }}</p>
+        </div> -->
+        <div class="uploaded">
+          <p class="property">Date Uploaded:</p>
+          <p>{{ dataset.date_uploaded }}</p>
+        </div>
+      </div>
+      <div style="text-align: center; margin: 70px 0 20px;">
+        <!-- {{dataset.title}} was utilized by this Research -->
+        RESEARCH INFORMATION
+      </div>
+      <div class="information">
+        <div class="research-title">
+          <p class="property">RESEARCH TITLE:</p>
+          <p>{{ dataset.research_title }}</p>
+        </div>
+        <div class="project-head">
+          <p class="property">PROJECT HEAD:</p>
+          <p>{{ dataset.project_head }}</p>
+        </div>
+        <div class="members">
+          <p class="property">MEMBERS:</p>
+          <p>{{ dataset.members }}</p>
+        </div>
+      </div>
+  </div>
+
+    <div class="right">
+      <div class="top">
+        <p class="recommended-text">RECOMMENDED DATASETS</p>
+        <div>
+          {% for similar_dataset in similar_datasets %}
+          <a href="/dataset/{{ similar_dataset.id }}" class="rec">
+            <p class="rec"><span style=" font-family: Arial, Helvetica, sans-serif;">{{ similar_dataset.title }}</span> - ({{ similar_dataset.data_type }})</p>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="bottom">
+        <!-- <button class="download-button download"><a href="">No file uploaded</a></button> -->
+        {% if dataset.file %}
+          <a href="{% url 'download' dataset.id %}" class="download">Download ({{ dataset.file.size|filesizeformat }}) </a>
+        {% else %}
+          <button class="download-button no-file">No file uploaded</button>
+        {% endif %}
+        <button data-modal-target="#modal" class="cite">Cite</button>
+        <div class="modal" id="modal">
+          <div class="modal-header">
+            <div></div>
+            <div class="title" id="copyCite" style="cursor: pointer;">Copy Citation</div>
+            <button data-close-button class="close-button">&times;</button>
+          </div>
+          <div class="cite-body">
+            <div class="text">{{ lastname }} ({{ year }}). {{ dataset.title }}. cspc_dataset_repository.</div>
+          </div>
+          <div class="modal-header">
+            <div></div>
+            <div class="title" id="copyBibtex" style="cursor: pointer;">Copy Bibtex</div>
+            <div></div>
+          </div>
+<div class="bibtex-body">@misc{misc_{{ dataset.title|slugify }}_{{ dataset.id }},
+        author    = {{ dataset.project_head }},
+        title     = {{ dataset.title }},
+        year      = {{ year }},
+}
+</div>
+        </div>
+        <div id="overlay"></div>
+        {% if user.is_authenticated %}
+        <div class="if-authenticated">
+          <a href="{% url 'update' dataset.id %}" class="update update-button" style="cursor:pointer">Update</a>
+          <button data-modal-target="#modal{{ dataset.id }}" class="remove archive-button" style="cursor:pointer">Archive</button>
+          <div class="modal modal-archive" id="modal{{ dataset.id }}">
+            <div class="modal-body">
+                <span style="font-weight: bolder;">{{ dataset.title }}</span> will be move to archive.
+            </div>
+            <div class="modal-header modal-header-archive">
+                <button data-close-button class="close-button close-button-archive">Cancel</button>
+                <a href="{% url 'archive' dataset.id %}" >Archive</a>
+            </div>
+        </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+</main>
+
+
+<script>
+  // CITATION POP-UP
+const openModalButtons = document.querySelectorAll("[data-modal-target]")
+const closeModalButtons = document.querySelectorAll("[data-close-button]")
+const overlay = document.getElementById("overlay")
+
+openModalButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    const modal = document.querySelector(button.dataset.modalTarget)
+    openModal(modal)
+  })
+})
+
+closeModalButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    const modal = button.closest(".modal")
+    closeModal(modal)
+  })
+})
+
+overlay.addEventListener("click", () => {
+  const modals = document.querySelectorAll(".modal.active")
+  modals.forEach(modal => {
+    closeModal(modal)
+  })
+})
+function openModal(modal) {
+  if (modal == null) return
+  modal.classList.add("active")
+  overlay.classList.add("active")
+}
+
+function closeModal(modal) {
+  modal.classList.remove("active")
+  overlay.classList.remove("active")
+}
+
+// copy citation
+const copyCite = document.getElementById('copyCite');
+  const citeBodyText = document.querySelector('.cite-body').innerText;
+
+  copyCite.addEventListener('click', () => {
+    navigator.clipboard.writeText(citeBodyText)
+  });
+
+// copy bibtex
+const copyBibtex = document.getElementById('copyBibtex');
+  const bibtexBodyText = document.querySelector('.bibtex-body').innerText;
+
+  copyBibtex.addEventListener('click', () => {
+    navigator.clipboard.writeText(bibtexBodyText)
+  });
+</script>
+
+<script src="{% static 'base/index.js' %}"></script>
+{% endblock %}

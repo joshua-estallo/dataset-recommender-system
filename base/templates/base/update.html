@@ -1,0 +1,199 @@
+{% extends "base/default.html" %}
+{% block title %} UPDATING {{ form.title.value }} {% endblock %}
+
+{% block content %}
+{% load static %}
+<style>
+  .main-upload .container {
+display: flex;
+justify-content: center;
+align-items: center;
+margin-bottom: 200px;
+/* outline: 2px solid white; */
+}
+.main-upload .form-section {
+/* border: 4px solid black; */
+width: 600px;
+padding: 20px;
+/* height: 500px; */
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+/* align-items: center; */
+}
+
+.main-upload .form-section .button {
+align-self: center;
+}
+
+.upload-text {
+text-align: center;
+}
+
+.main-upload form input, form label, .django-select2, .select2-selection, textarea {
+display: block;
+width: 100%;
+}
+
+.main-upload label {
+padding: 4px;
+margin: 4px 0px;
+border: none;
+}
+
+.main-upload #section3 span {
+display: block;
+width: 100%;
+border: none;
+}
+
+.main-upload input, textarea {
+background-color: #fff;
+color: #000;
+height: 30px;
+}
+
+.main-upload textarea {
+  height: 90px;
+}
+span {
+color: #111;
+}
+
+.main-upload .form > *{
+margin: 5px 0px;
+}
+
+select {
+  background-color: white;
+  color: black;
+}
+.main-upload .value {
+  margin-bottom: 20px;
+}
+.note {
+  color: #FFD700;
+}
+.button > * {
+  display: block;
+  outline: 1px solid white;
+  padding: 5px 30px;
+  border-radius: 5px;
+}
+.button {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.button .prev {
+  color: #FF6347 ;
+}
+.button .next {
+  color: #2ecc71 ;
+}
+.button .upload{
+  background-color: hsl(204, 70%, 53%);
+}
+.button .upload:hover{
+  background-color: hsl(204, 70%, 63%);
+}
+.button .prev:hover, .button .next:hover {
+  background-color: #444;
+}
+</style>
+<title>Upload</title>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<main class="main-upload">
+  <div class="upload-text">UPDATE DATASET</div>
+  <div class="container">
+    <form method="POST" action="{% url 'update' pk %}" action enctype="multipart/form-data" autocomplete="off">
+      {% csrf_token %}
+      {% for field in form %}
+        {{ field.errors }}
+      {% endfor %}
+      <div class="form-section" id="section1">
+        <div class="form">
+          <div class="label">Dataset {{ form.title.label }}</div>
+          <div class="value">{{ form.title }}</div>
+          <div class="label">{{ form.description.label }}</div>
+          <div class="value">{{ form.description }}</div>
+          <div class="label">{{ form.tags.label }}</div>
+          <div class="value">{{ form.tags }}</div>
+          <div class="label">{{ form.category.label }}</div>
+          <div class="value">{{ form.category }}</div>
+          <div class="label">{{ form.data_type.label }}</div>
+          <div class="value">{{ form.data_type }}</div>
+          <div class="label">{{ form.file_format.label }}</div>
+          <div class="value">{{ form.file_format }}</div>
+        </div>
+        <div class="button">
+          <button class="next" type="button" onclick="page2()">Next</button>
+        </div>
+      </div>
+      <div class="form-section" id="section2" style="display: none;">
+        <div class="form">
+          <div class="label">{{ form.research_title.label }}</div>
+          <div class="value">{{ form.research_title }}</div>
+          <div class="label">{{ form.project_head.label }}: <span style="color: white;">(Lastname, Firstname MI.)</span></div>
+          <div class="value">{{ form.project_head }}</div>
+          <div class="label">{{ form.members.label }} </div>
+          <div class="value">{{ form.members }}</div>
+        </div>
+          <div class="button">
+            <button class="prev" type="button" onclick="page1()">Previous</button>
+            <button class="next" type="button" onclick="page3()">Next</button>
+          </div>
+      </div>
+      <div class="form-section" id="section3" style="display: none;">
+        <div class="form">
+          <div class="label">{{ form.source.label }}</div>
+          <div class="source-note"><span style="color: #2ecc71; display: inline;">Primary</span>: The group collected the dataset. </div> 
+          <div class="source-note"><span style="color: #2ecc71; display: inline;">Secondary</span>: The dataset originates from a different repository of datasets..  </div>
+          <div class="value">{{ form.source }}</div>
+          <div class="label">{{ form.link.label }}</div>
+          <div class="note"> Enter the reference (URL or DOI) if the source is Secondary. Leave blank if Primary</div>
+          <div class="value">{{ form.link }}</div>
+          <div class="label">{{ form.form.label }}</div>
+          <div class="value">{{ form.form }}</div>
+          <div class="label">{{ form.file.label }}</div>
+          <div class="note">The dataset must be submitted in a ZIP file format.</div>
+          <div class="value">{{ form.file }}</div>
+        </div>
+          <div class="button">
+            <button class="prev" type="button" onclick="page2()">Previous</button>
+            <button class="upload" type="submit">UPDATE</button>
+          </div>
+      </div>
+    </form>
+  </div>
+</main>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+   $(document).ready(function() {
+        $('.django-select2').select2();
+    });
+    // form pagination
+function page1(nextSection) {
+  $(`#section1`).show();
+  $(`#section2`).hide();
+  $(`#section3`).hide();
+}
+
+function page2() {
+  $(`#section1`).hide();
+  $(`#section2`).show();
+  $(`#section3`).hide();
+}
+
+function page3() {
+  $(`#section1`).hide();
+  $(`#section2`).hide();
+  $(`#section3`).show();
+}
+</script>
+<script src="{% static 'base/index.js' %}"></script>
+
+{% endblock content %}

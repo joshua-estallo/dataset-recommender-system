@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'base/reset.css' %}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <!-- <link rel="stylesheet" href="{% static 'base/style.css' %}"> -->
+  <title>{% block title %}  {% endblock %}</title>
+
+  <title>Home Page</title>
+  <style>
+    body {
+  background-color: #333;
+  color: #fff;
+}
+
+/* NAV CSS */
+
+header {
+  background-color: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+header nav {
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 5px;
+  padding: 20px 0px;
+}
+
+header nav input {
+  border: 1px solid white;
+  border-radius: 25px;
+  width: 300px;
+  padding: 8px;
+  background-color: white;
+  color: black;
+}
+
+header .logo {
+  cursor: pointer;
+}
+input::placeholder {
+  color: #444;
+}
+main {
+  margin: auto 0px;  
+}
+
+.container {
+  display: flex;
+  margin: 0px auto;  
+  width: 90%;
+}
+
+  </style>
+</head>
+<body>
+
+  {% include "base/nav.html" %}
+
+  {% block content %} {% endblock content %}
+
+
+  <script src="{% static 'base/index.js' %}"></script>
+</body>
+</html>

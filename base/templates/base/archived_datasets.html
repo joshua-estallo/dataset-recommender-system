@@ -1,0 +1,254 @@
+{% extends "base/default.html" %}
+{% block title %} Home Page {% endblock %}
+
+{% block content %}
+<style>
+  main {
+  margin: auto 0px;  
+}
+
+.container {
+  display: flex;
+  margin: 0px auto;  
+  width: 90%;
+  margin-bottom: 200px;
+}
+
+.filter {
+  flex: 1;
+}
+
+.content {
+  flex: 3;
+}
+
+
+.content .browse-upload-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content .browse-upload-text .upload {
+  padding: 5px 10px;
+  color: white;
+  background-color: hsl(35, 84%, 62%);
+  border-radius: 8px;
+}
+.content .browse-upload-text .upload:hover {
+  background-color: hsl(35, 56%, 44%);
+
+}
+.container .filter {
+  margin: 0px auto;
+  /* border-right: 2px solid white; */
+  margin-right: 15px ;
+  /* border: 1px solid blue; */
+}
+
+.filter .filter-text {
+  text-align: center;
+}
+
+.content .browse{
+  text-align: center;
+}
+
+.content .datasetss {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid grey;
+  padding: 6px;
+  border-radius: 5px;
+}
+
+.filter .types {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.filter .types > * {
+  width: 45%;
+  text-align: center;
+  border: .1px solid #eee;
+  border-radius: 5px;
+  padding: 10px ;
+  margin-top: 18px;
+}
+
+.filter .type:hover {
+  background-color: #555;
+}
+
+.pagination {
+  text-align: center;
+  margin: 20px 0px;
+}
+
+.datatype {
+  text-align: center;
+  /* border: 1px solid white; */
+  /* padding: 15px; */
+}
+
+.data {
+  width: 80%;
+  padding-bottom: 5px;
+  /* border-bottom: 1px solid white; */
+}
+
+.data .title {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 21px;
+  margin: 11px 0px;
+  color: hsl(220, 50%, 80%)
+}
+
+
+.data .overview {
+  font-family: Arial, Helvetica, sans-serif;
+}
+/* archive confirm */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: 200ms ease-in-out;
+  border: 2px solid green;
+  z-index: 10;
+  background-color: white;
+  color: black;
+  width: 500px;
+  max-width: 80%;
+}
+
+.modal.active {
+  transform: translate(-50%, -50%) scale(1);
+  transition: 200ms ease-in-out;
+
+}
+
+.modal-header {
+  display:  flex;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+.modal-header .close-button{
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+ 
+.modal-body {
+  padding: 10px 15px;
+}
+
+#overlay {
+  position: fixed;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .5);
+  pointer-events: none;
+}
+
+#overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.update {
+  /* background-color: #3f7bff; */
+  color: hsl(221, 100%, 62%);
+}
+
+.remove {
+  /* background-color: #df3000; */
+  color: hsl(13, 100%, 44%);
+}
+
+.update:hover {
+  /* background-color: #3f7bff; */
+  color: hsl(221, 100%, 80%);
+}
+
+.remove:hover {
+  /* background-color: #df3000; */
+  color: hsl(13, 100%, 80%);
+}
+
+/* pagination */
+.pagination a {
+  cursor: pointer;
+  
+}
+.pagination a:hover {
+  text-decoration: underline;
+}
+</style>
+<main class="main-home">
+  <h1 style="text-align: center;">ARCHIVED DATASETS</h1>
+  <div class="container">
+    <div class="content">
+      <div class="pagination">
+        <span class="step-links">
+            <!-- {% if page.has_previous %}
+                <a href="?q={{ q }}&page=1">&laquo; first</a>
+                <a href="?q={{ q }}&page={{ page.previous_page_number }}">previous</a>
+            {% endif %}
+            
+            <span class="current-page">Page {{ page.number }} of {{ page.paginator.num_pages }}.</span>
+            
+            {% if page.has_next %}
+                <a href="?q={{ q }}&page={{ page.next_page_number }}">next</a>
+                <a href="?q={{ q }}&page={{ page.paginator.num_pages }}">last &raquo;</a>
+            {% endif %} -->
+        </span>
+      </div>
+      {% for dataset in page %}
+          <div class="datasetss">
+              <div class="data">
+                  <div class="title">{{ dataset.title }}</div>
+              </div>
+              <div class="unarchived-button" style="cursor: pointer; outline: 1px solid green; padding: 5px;">
+                <a href="{% url 'unarchive' dataset.id %}">Unarchive</a>
+              </div>
+              <div class="modal" id="modal{{ dataset.id }}">
+                <div class="modal-body">
+                    Are you sure you want to unarchive {{ dataset.title }} ?
+                </div>
+                <div class="modal-header">
+                    <button data-close-button class="close-button">Cancel</button>
+                    <a href="{% url 'unarchive' dataset.id %}">Unarchive</a>
+                </div>
+            </div>
+            <div id="overlay"></div>
+          </div>
+      {% endfor %}
+  
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".unarchive-button").on("click", function (event) {
+            event.preventDefault(); // Prevent the default link behavior
+
+            if (confirm("Are you sure you want to unarchive this dataset?")) {
+                window.location.href = $(this).attr("href");
+            }
+        });
+    });
+</script>
+{% endblock content %}
